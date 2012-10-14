@@ -9,12 +9,17 @@
 /* Begin PBXBuildFile section */
 		78C4444B1628E0F00001DA25 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C4444A1628E0F00001DA25 /* Cocoa.framework */; };
 		78C444551628E0F00001DA25 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78C444531628E0F00001DA25 /* InfoPlist.strings */; };
-		78C444591628E0F00001DA25 /* objc_promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C444581628E0F00001DA25 /* objc_promise.m */; };
 		78C444611628E0F00001DA25 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C444601628E0F00001DA25 /* SenTestingKit.framework */; };
 		78C444621628E0F00001DA25 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C4444A1628E0F00001DA25 /* Cocoa.framework */; };
 		78C444651628E0F00001DA25 /* objc-promise.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C444471628E0F00001DA25 /* objc-promise.framework */; };
 		78C4446B1628E0F00001DA25 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78C444691628E0F00001DA25 /* InfoPlist.strings */; };
-		78C4446E1628E0F00001DA25 /* objc_promiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C4446D1628E0F00001DA25 /* objc_promiseTests.m */; };
+		78C444791628E2E30001DA25 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C444771628E2E30001DA25 /* Promise.h */; };
+		78C4447A1628E2E30001DA25 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C444781628E2E30001DA25 /* Promise.m */; };
+		78C4447D16291DD80001DA25 /* Deferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C4447B16291DD80001DA25 /* Deferred.h */; };
+		78C4447E16291DD80001DA25 /* Deferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C4447C16291DD80001DA25 /* Deferred.m */; };
+		78C44481162922B50001DA25 /* BasicPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C44480162922B50001DA25 /* BasicPromiseTests.m */; };
+		78C444821629FD870001DA25 /* Deferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C4447C16291DD80001DA25 /* Deferred.m */; };
+		78C444831629FD8B0001DA25 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C444781628E2E30001DA25 /* Promise.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,14 +41,16 @@
 		78C444521628E0F00001DA25 /* objc-promise-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "objc-promise-Info.plist"; sourceTree = "<group>"; };
 		78C444541628E0F00001DA25 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		78C444561628E0F00001DA25 /* objc-promise-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "objc-promise-Prefix.pch"; sourceTree = "<group>"; };
-		78C444571628E0F00001DA25 /* objc_promise.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = objc_promise.h; sourceTree = "<group>"; };
-		78C444581628E0F00001DA25 /* objc_promise.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = objc_promise.m; sourceTree = "<group>"; };
 		78C4445F1628E0F00001DA25 /* objc-promiseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "objc-promiseTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C444601628E0F00001DA25 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		78C444681628E0F00001DA25 /* objc-promiseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "objc-promiseTests-Info.plist"; sourceTree = "<group>"; };
 		78C4446A1628E0F00001DA25 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		78C4446C1628E0F00001DA25 /* objc_promiseTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = objc_promiseTests.h; sourceTree = "<group>"; };
-		78C4446D1628E0F00001DA25 /* objc_promiseTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = objc_promiseTests.m; sourceTree = "<group>"; };
+		78C444771628E2E30001DA25 /* Promise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Promise.h; sourceTree = "<group>"; };
+		78C444781628E2E30001DA25 /* Promise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Promise.m; sourceTree = "<group>"; };
+		78C4447B16291DD80001DA25 /* Deferred.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Deferred.h; sourceTree = "<group>"; };
+		78C4447C16291DD80001DA25 /* Deferred.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Deferred.m; sourceTree = "<group>"; };
+		78C4447F162922B50001DA25 /* BasicPromiseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicPromiseTests.h; sourceTree = "<group>"; };
+		78C44480162922B50001DA25 /* BasicPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicPromiseTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,9 +117,11 @@
 		78C444501628E0F00001DA25 /* objc-promise */ = {
 			isa = PBXGroup;
 			children = (
-				78C444571628E0F00001DA25 /* objc_promise.h */,
-				78C444581628E0F00001DA25 /* objc_promise.m */,
 				78C444511628E0F00001DA25 /* Supporting Files */,
+				78C444771628E2E30001DA25 /* Promise.h */,
+				78C444781628E2E30001DA25 /* Promise.m */,
+				78C4447B16291DD80001DA25 /* Deferred.h */,
+				78C4447C16291DD80001DA25 /* Deferred.m */,
 			);
 			path = "objc-promise";
 			sourceTree = "<group>";
@@ -130,9 +139,9 @@
 		78C444661628E0F00001DA25 /* objc-promiseTests */ = {
 			isa = PBXGroup;
 			children = (
-				78C4446C1628E0F00001DA25 /* objc_promiseTests.h */,
-				78C4446D1628E0F00001DA25 /* objc_promiseTests.m */,
 				78C444671628E0F00001DA25 /* Supporting Files */,
+				78C4447F162922B50001DA25 /* BasicPromiseTests.h */,
+				78C44480162922B50001DA25 /* BasicPromiseTests.m */,
 			);
 			path = "objc-promiseTests";
 			sourceTree = "<group>";
@@ -153,6 +162,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78C444791628E2E30001DA25 /* Promise.h in Headers */,
+				78C4447D16291DD80001DA25 /* Deferred.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +274,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78C444591628E0F00001DA25 /* objc_promise.m in Sources */,
+				78C4447A1628E2E30001DA25 /* Promise.m in Sources */,
+				78C4447E16291DD80001DA25 /* Deferred.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +283,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78C4446E1628E0F00001DA25 /* objc_promiseTests.m in Sources */,
+				78C44481162922B50001DA25 /* BasicPromiseTests.m in Sources */,
+				78C444821629FD870001DA25 /* Deferred.m in Sources */,
+				78C444831629FD8B0001DA25 /* Promise.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

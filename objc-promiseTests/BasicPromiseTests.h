@@ -7,6 +7,8 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "Promise.h"
+#import "Deferred.h"
 
 @interface BasicPromiseTests : SenTestCase
 

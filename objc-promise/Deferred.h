@@ -10,4 +10,10 @@
 
 @interface Deferred : Promise
 
++ (Deferred *)deferred;
+
+- (Promise *)promise;
+- (Promise *)resolve:(id)result;
+- (Promise *)reject:(NSError *)reason;
+
 @end

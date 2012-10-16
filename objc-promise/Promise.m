@@ -35,65 +35,17 @@ typedef void (^bound_block)(void);
 
 @implementation Promise
 
-@synthesize then = _then, failed = _failed, done = _done;
 @synthesize result = _result, reason = _reason;
 @dynamic isResolved, isRejected;
 
 - (id)init
 {
     if (self = [super init]) {
-        // bind self reference to a block variable to ensure
-        // self is not retained by the block methods it owns
-        __block Promise *this = self;
-        
         _callbackBindings = [[NSMutableArray alloc] init];
         _state = Incomplete;
         
         _stateLock = [[NSObject alloc] init];
         _result = nil;
-        
-        _then = Block_copy(^Promise *(resolved_block resolvedBlock){
-            // retain the block until we can call with the result
-            Block_copy(resolvedBlock);
-            
-            [this bindOrCallBlock:^{
-                if (this.isResolved) {
-                    resolvedBlock(this.result);
-                }
-                
-                Block_release(resolvedBlock);
-            }];
-            
-            return this;
-        });
-        
-        _failed = Block_copy(^Promise *(rejected_block rejectedBlock){
-            // retain the block until we can call with the result
-            Block_copy(rejectedBlock);
-            
-            [this bindOrCallBlock:^{
-                if (this.isRejected) {
-                    rejectedBlock(this.reason);
-                }
-                
-                Block_release(rejectedBlock);
-            }];
-            
-            return this;
-        });
-        
-        _done = Block_copy(^Promise *(any_block anyBlock){
-            // retain the block until we can call with the result
-            Block_copy(anyBlock);
-            
-            [this bindOrCallBlock:^{
-                anyBlock();
-                
-                Block_release(anyBlock);
-            }];
-            
-            return this;
-        });
     }
     
     return self;
@@ -113,10 +65,6 @@ typedef void (^bound_block)(void);
     [_reason release];
     _reason = nil;
     
-    Block_release(_then);
-    Block_release(_failed);
-    Block_release(_done);
-    
     [super dealloc];
 }
 
@@ -128,6 +76,75 @@ typedef void (^bound_block)(void);
 - (BOOL)isRejected
 {
     return _state == Rejected;
+}
+
+- (Promise *)then:(resolved_block)resolvedBlock
+{
+    __block Promise *this = self;
+    
+    // retain the block until we can call with the result
+    Block_copy(resolvedBlock);
+    
+    [this bindOrCallBlock:^{
+        if (this.isResolved) {
+            resolvedBlock(this.result);
+        }
+        
+        Block_release(resolvedBlock);
+    }];
+    
+    return this;
+}
+
+- (Promise *)failed:(rejected_block)rejectedBlock
+{
+    __block Promise *this = self;
+    
+    // retain the block until we can call with the result
+    Block_copy(rejectedBlock);
+    
+    [this bindOrCallBlock:^{
+        if (this.isRejected) {
+            rejectedBlock(this.reason);
+        }
+        
+        Block_release(rejectedBlock);
+    }];
+    
+    return this;
+}
+
+- (Promise *)any:(any_block)anyBlock
+{
+    __block Promise *this = self;
+    
+    // retain the block until we can call with the result
+    Block_copy(anyBlock);
+    
+    [this bindOrCallBlock:^{
+        anyBlock();
+        
+        Block_release(anyBlock);
+    }];
+    
+    return this;
+}
+
+- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock
+{
+    [self then:thenBlock];
+    [self failed:rejectedBlock];
+    
+    return self;
+}
+
+- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock
+{
+    [self then:thenBlock];
+    [self failed:rejectedBlock];
+    [self any:anyBlock];
+    
+    return self;
 }
 
 @end

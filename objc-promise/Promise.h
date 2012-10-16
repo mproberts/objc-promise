@@ -14,14 +14,6 @@ typedef void (^resolved_block)(id);
 typedef void (^rejected_block)(NSError *);
 typedef void (^any_block)(void);
 
-typedef Promise *(^then_block)(resolved_block);
-typedef Promise *(^failed_block)(rejected_block);
-typedef Promise *(^done_block)(any_block);
-
-typedef Promise *(^then_on_block)(resolved_block);
-typedef Promise *(^failed_on_block)(rejected_block);
-typedef Promise *(^done_on_block)(any_block);
-
 typedef enum {
     Incomplete = 0,
     Rejected   = 1,
@@ -36,10 +28,6 @@ typedef enum {
     
     id _result;
     NSError *_reason;
-    
-    then_block _then;
-    failed_block _failed;
-    done_block _done;
 }
 
 @property (readonly) id result;
@@ -47,8 +35,10 @@ typedef enum {
 @property (readonly) BOOL isResolved;
 @property (readonly) BOOL isRejected;
 
-@property (readonly) then_block then;
-@property (readonly) failed_block failed;
-@property (readonly) done_block done;
+- (Promise *)then:(resolved_block)resolvedBlock;
+- (Promise *)failed:(rejected_block)rejectedBlock;
+- (Promise *)any:(any_block)anyBlock;
+- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock;
+- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock;
 
 @end

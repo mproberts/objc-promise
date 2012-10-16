@@ -13,9 +13,9 @@
 		78C444621628E0F00001DA25 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C4444A1628E0F00001DA25 /* Cocoa.framework */; };
 		78C444651628E0F00001DA25 /* objc-promise.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C444471628E0F00001DA25 /* objc-promise.framework */; };
 		78C4446B1628E0F00001DA25 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78C444691628E0F00001DA25 /* InfoPlist.strings */; };
-		78C444791628E2E30001DA25 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C444771628E2E30001DA25 /* Promise.h */; };
+		78C444791628E2E30001DA25 /* Promise.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C444771628E2E30001DA25 /* Promise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78C4447A1628E2E30001DA25 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C444781628E2E30001DA25 /* Promise.m */; };
-		78C4447D16291DD80001DA25 /* Deferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C4447B16291DD80001DA25 /* Deferred.h */; };
+		78C4447D16291DD80001DA25 /* Deferred.h in Headers */ = {isa = PBXBuildFile; fileRef = 78C4447B16291DD80001DA25 /* Deferred.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78C4447E16291DD80001DA25 /* Deferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C4447C16291DD80001DA25 /* Deferred.m */; };
 		78C44481162922B50001DA25 /* BasicPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C44480162922B50001DA25 /* BasicPromiseTests.m */; };
 		78C444821629FD870001DA25 /* Deferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C4447C16291DD80001DA25 /* Deferred.m */; };

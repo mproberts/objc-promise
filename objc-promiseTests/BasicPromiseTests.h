@@ -7,9 +7,20 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "Promise.h"
+#import "PromiseTestCallback.h"
 #import "Deferred.h"
 
-@interface BasicPromiseTests : SenTestCase
+@interface BasicPromiseTests : SenTestCase {
+    PromiseTestCallback *callback;
+}
+
+- (void)setUp;
+- (void)tearDown;
+
+- (void)testPromiseThen;
+- (void)testPromiseFailed;
+- (void)testCalledOnceOnly;
+- (void)testResolvedBeforeBinding;
+- (void)testPromiseResolveCallsOnlyThenAndDone;
 
 @end

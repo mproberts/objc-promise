@@ -10,34 +10,105 @@
 
 @implementation BasicPromiseTests
 
-- (void)testPromiseResolveCallsOnlyThen
+- (void)setUp
 {
-    Deferred *deferred = [[Deferred alloc] init];
+    [super setUp];
+    
+    callback = [[PromiseTestCallback alloc] init];
+}
+
+- (void)tearDown
+{
+    [super tearDown];
+    
+    [callback release];
+    callback = nil;
+}
+
+- (void)testPromiseThen
+{
+    Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];
     
-    __block BOOL thenCalled = NO;
-    __block BOOL failedCalled = NO;
-    __block BOOL doneCalled = NO;
+    [promise then:callback.thenBlock];
     
-    [promise then:^(id result){
-        thenCalled = YES;
-    } failed:^(NSError *reason){
-        failedCalled = YES;
-    } any:^{
-        doneCalled = YES;
-    }];
+    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
     
-    STAssertFalse(thenCalled, @"Then not called synchronously");
-    STAssertFalse(failedCalled, @"Failed not called");
-    STAssertFalse(doneCalled, @"Done not called synchronously");
+    [deferred resolve:@"A"];
+    
+    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+}
+
+- (void)testPromiseFailed
+{
+    Deferred *deferred = [Deferred deferred];
+    Promise *promise = [deferred promise];
+    
+    [promise failed:callback.failedBlock];
+    
+    STAssertEquals(callback.failedCallCount, 0, @"Failed not called synchronously");
+    
+    [deferred reject:[NSError errorWithDomain:@"B" code:9001 userInfo:nil]];
+    
+    STAssertEquals(callback.failedCallCount, 1, @"Failed should be called");
+}
+
+- (void)testCalledOnceOnly
+{
+    Deferred *deferred = [Deferred deferred];
+    Promise *promise = [deferred promise];
+    
+    [promise then:callback.thenBlock
+           failed:callback.failedBlock
+              any:callback.anyBlock];
+    
+    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
+    
+    [deferred resolve:@"First"];
+    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+    STAssertEquals(callback.anyCallCount, 1, @"Any should be called");
+    
+    [deferred resolve:@"Second"];
+    STAssertEquals(callback.thenCallCount, 1, @"Then should be called only once");
+    
+    [deferred reject:[NSError errorWithDomain:@"Third is an error" code:9001 userInfo:nil]];
+    STAssertEquals(callback.thenCallCount, 1, @"Promise cannot change state");
+    STAssertEquals(callback.failedCallCount, 0, @"Promise cannot change state");
+    STAssertEquals(callback.anyCallCount, 1, @"Promise cannot change state");
+}
+
+- (void)testResolvedBeforeBinding
+{
+    Deferred *deferred = [Deferred deferred];
+    Promise *promise = [deferred promise];
+    
+    [deferred resolve:@"First"];
+    
+    [promise then:callback.thenBlock];
+    STAssertEquals(callback.thenCallCount, 1, @"Should be called immediately upon binding");
+    
+    [promise then:callback.thenBlock];
+    STAssertEquals(callback.thenCallCount, 2, @"Should be called again");
+}
+
+- (void)testPromiseResolveCallsOnlyThenAndDone
+{
+    Deferred *deferred = [Deferred deferred];
+    Promise *promise = [deferred promise];
+    
+    [promise then:callback.thenBlock
+           failed:callback.failedBlock
+              any:callback.anyBlock];
+    
+    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
+    STAssertEquals(callback.failedCallCount, 0, @"Failed not called");
+    STAssertEquals(callback.anyCallCount, 0, @"Done not called synchronously");
     
     [deferred resolve:@"Test"];
     
-    STAssertTrue(thenCalled, @"Then should be called");
-    STAssertFalse(failedCalled, @"Failed should not be called");
-    STAssertTrue(doneCalled, @"Done should be called");
-    
-    [deferred release];
+    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+    STAssertEquals(callback.failedCallCount, 0, @"Failed should not be called");
+    STAssertEquals(callback.anyCallCount, 1, @"Done should be called");
 }
 
 @end

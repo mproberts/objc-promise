@@ -8,8 +8,6 @@
 
 #import "Deferred.h"
 
-typedef void (^bound_block)(void);
-
 @implementation Deferred (Private)
 
 - (void)transitionToState:(PromiseState)state
@@ -32,7 +30,7 @@ typedef void (^bound_block)(void);
     
     if (shouldComplete) {
         for (bound_block block in blocksToExecute) {
-            block();
+            [self executeBlock:block];
             
             Block_release(block);
         }

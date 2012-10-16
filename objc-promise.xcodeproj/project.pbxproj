@@ -16,6 +16,10 @@
 		7823C8C5162CEA6D000342B4 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C8C3162CEA6D000342B4 /* Promise.m */; };
 		7823C8CC162CEAAB000342B4 /* BasicPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C8CB162CEAAB000342B4 /* BasicPromiseTests.m */; };
 		7823C907162CEB86000342B4 /* objc-promiseTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7823C906162CEB86000342B4 /* objc-promiseTests-Info.plist */; };
+		7823C90F162D01F0000342B4 /* PromiseTestCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C90E162D01F0000342B4 /* PromiseTestCallback.m */; };
+		7823C915162D235C000342B4 /* DispatchPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C914162D235C000342B4 /* DispatchPromise.m */; };
+		7823C918162D3397000342B4 /* JoinedPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C917162D3397000342B4 /* JoinedPromiseTests.m */; };
+		7823C91B162D3A7C000342B4 /* DispatchPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C91A162D3A7C000342B4 /* DispatchPromiseTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +58,14 @@
 		7823C8CA162CEAAB000342B4 /* BasicPromiseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicPromiseTests.h; sourceTree = "<group>"; };
 		7823C8CB162CEAAB000342B4 /* BasicPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicPromiseTests.m; sourceTree = "<group>"; };
 		7823C906162CEB86000342B4 /* objc-promiseTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "objc-promiseTests-Info.plist"; sourceTree = "<group>"; };
+		7823C90D162D01F0000342B4 /* PromiseTestCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PromiseTestCallback.h; sourceTree = "<group>"; };
+		7823C90E162D01F0000342B4 /* PromiseTestCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PromiseTestCallback.m; sourceTree = "<group>"; };
+		7823C913162D235C000342B4 /* DispatchPromise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchPromise.h; sourceTree = "<group>"; };
+		7823C914162D235C000342B4 /* DispatchPromise.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchPromise.m; sourceTree = "<group>"; };
+		7823C916162D3397000342B4 /* JoinedPromiseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinedPromiseTests.h; sourceTree = "<group>"; };
+		7823C917162D3397000342B4 /* JoinedPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinedPromiseTests.m; sourceTree = "<group>"; };
+		7823C919162D3A7C000342B4 /* DispatchPromiseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchPromiseTests.h; sourceTree = "<group>"; };
+		7823C91A162D3A7C000342B4 /* DispatchPromiseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchPromiseTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,11 +123,13 @@
 		7823C897162CE9EB000342B4 /* objc-promise */ = {
 			isa = PBXGroup;
 			children = (
+				7823C898162CE9EB000342B4 /* Supporting Files */,
 				7823C8C0162CEA6D000342B4 /* Deferred.h */,
 				7823C8C1162CEA6D000342B4 /* Deferred.m */,
 				7823C8C2162CEA6D000342B4 /* Promise.h */,
 				7823C8C3162CEA6D000342B4 /* Promise.m */,
-				7823C898162CE9EB000342B4 /* Supporting Files */,
+				7823C913162D235C000342B4 /* DispatchPromise.h */,
+				7823C914162D235C000342B4 /* DispatchPromise.m */,
 			);
 			path = "objc-promise";
 			sourceTree = "<group>";
@@ -131,9 +145,15 @@
 		7823C8AC162CE9EB000342B4 /* objc-promiseTests */ = {
 			isa = PBXGroup;
 			children = (
+				7823C909162CEB8C000342B4 /* Supporting Files */,
 				7823C8CA162CEAAB000342B4 /* BasicPromiseTests.h */,
 				7823C8CB162CEAAB000342B4 /* BasicPromiseTests.m */,
-				7823C909162CEB8C000342B4 /* Supporting Files */,
+				7823C90D162D01F0000342B4 /* PromiseTestCallback.h */,
+				7823C90E162D01F0000342B4 /* PromiseTestCallback.m */,
+				7823C916162D3397000342B4 /* JoinedPromiseTests.h */,
+				7823C917162D3397000342B4 /* JoinedPromiseTests.m */,
+				7823C919162D3A7C000342B4 /* DispatchPromiseTests.h */,
+				7823C91A162D3A7C000342B4 /* DispatchPromiseTests.m */,
 			);
 			path = "objc-promiseTests";
 			sourceTree = "<group>";
@@ -246,6 +266,7 @@
 			files = (
 				7823C8C4162CEA6D000342B4 /* Deferred.m in Sources */,
 				7823C8C5162CEA6D000342B4 /* Promise.m in Sources */,
+				7823C915162D235C000342B4 /* DispatchPromise.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +275,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7823C8CC162CEAAB000342B4 /* BasicPromiseTests.m in Sources */,
+				7823C90F162D01F0000342B4 /* PromiseTestCallback.m in Sources */,
+				7823C918162D3397000342B4 /* JoinedPromiseTests.m in Sources */,
+				7823C91B162D3A7C000342B4 /* DispatchPromiseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

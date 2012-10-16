@@ -7,8 +7,8 @@
 //
 
 #import "Promise.h"
-
-typedef void (^bound_block)(void);
+#import "Deferred.h"
+#import "DispatchPromise.h"
 
 @implementation Promise (Private)
 
@@ -25,10 +25,24 @@ typedef void (^bound_block)(void);
     }
     
     if (!blockWasBound) {
-        block();
+        [self executeBlock:block];
     }
     
     return blockWasBound;
+}
+
+- (void)executeBlock:(bound_block)block
+{
+    block();
+}
+
+- (void)chainTo:(Deferred *)deferred
+{
+    [self then:^(id result){
+        [deferred resolve:result];
+    } failed:^(NSError *error){
+        [deferred reject:error];
+    }];
 }
 
 @end
@@ -76,6 +90,52 @@ typedef void (^bound_block)(void);
 - (BOOL)isRejected
 {
     return _state == Rejected;
+}
+
++ (Promise *)or:(NSArray *)promises
+{
+    int count = promises.count;
+    __block int rejectedCount = 0;
+    Deferred *deferred = [[Deferred alloc] init];
+    
+    // any promise resolves our deferred
+    for (Promise *promise in promises) {
+        [promise then:^(id result) {
+            [deferred resolve:result];
+        } failed:^(NSError *error){
+            rejectedCount++;
+            
+            // all promises have resolved, resolve our promise
+            if (rejectedCount == count) {
+                [deferred reject:error];
+            }
+        }];
+    }
+    
+    return [deferred promise];
+}
+
++ (Promise *)and:(NSArray *)promises
+{
+    int count = promises.count;
+    __block int resolvedCount = 0;
+    Deferred *deferred = [[Deferred alloc] init];
+    
+    // any promise resolves our deferred
+    for (Promise *promise in promises) {
+        [promise then:^(id result) {
+            resolvedCount++;
+            
+            // all promises have resolved, resolve our promise
+            if (resolvedCount == count) {
+                [deferred resolve:result];
+            }
+        } failed:^(NSError *error){
+            [deferred reject:error];
+        }];
+    }
+    
+    return [deferred promise];
 }
 
 - (Promise *)then:(resolved_block)resolvedBlock
@@ -145,6 +205,20 @@ typedef void (^bound_block)(void);
     [self any:anyBlock];
     
     return self;
+}
+
+- (Promise *)on:(dispatch_queue_t)queue
+{
+    Deferred *deferred = [[DispatchPromise alloc] initWithQueue:queue];
+    
+    [self chainTo:deferred];
+    
+    return [deferred autorelease];
+}
+
+- (Promise *)onMainQueue
+{
+    return [self on:dispatch_get_main_queue()];
 }
 
 @end

@@ -11,7 +11,7 @@ Promise *promise = [russell promise];
 	NSLog(@"The present King of France is %@!", hairType);
 }];
 
-[russell resolve:@"bald];
+[russell resolve:@"bald"];
 
 // The present King of France is bald!
 ```

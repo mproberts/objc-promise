@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class Promise;
+typedef void (^bound_block)(void);
+
+@class Deferred;
+@class DispatchPromise;
 
 typedef void (^resolved_block)(id);
 typedef void (^rejected_block)(NSError *);
@@ -35,10 +38,16 @@ typedef enum {
 @property (readonly) BOOL isResolved;
 @property (readonly) BOOL isRejected;
 
++ (Promise *)or:(NSArray *)promises;
++ (Promise *)and:(NSArray *)promises;
+
 - (Promise *)then:(resolved_block)resolvedBlock;
 - (Promise *)failed:(rejected_block)rejectedBlock;
 - (Promise *)any:(any_block)anyBlock;
 - (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock;
 - (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock;
+
+- (Promise *)on:(dispatch_queue_t)queue;
+- (Promise *)onMainQueue;
 
 @end

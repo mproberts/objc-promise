@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Mike Roberts. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 @class Promise;
 

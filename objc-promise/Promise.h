@@ -25,6 +25,7 @@ typedef enum {
 
 @interface Promise : NSObject {
     NSMutableArray *_callbackBindings;
+    dispatch_queue_t _queue;
     
     NSObject *_stateLock;
     PromiseState _state;
@@ -49,5 +50,7 @@ typedef enum {
 
 - (Promise *)on:(dispatch_queue_t)queue;
 - (Promise *)onMainQueue;
+
+- (Promise *)timeout:(NSTimeInterval)interval;
 
 @end

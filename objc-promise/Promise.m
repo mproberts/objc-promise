@@ -8,9 +8,23 @@
 
 #import "Promise.h"
 #import "Deferred.h"
-#import "DispatchPromise.h"
 
 @implementation Promise (Private)
+
+- (id)initWithQueue:(dispatch_queue_t)queue
+{
+    if (self = [super init]) {
+        _callbackBindings = [[NSMutableArray alloc] init];
+        _state = Incomplete;
+        
+        _queue = [queue retain];
+        
+        _stateLock = [[NSObject alloc] init];
+        _result = nil;
+    }
+    
+    return self;
+}
 
 - (BOOL)bindOrCallBlock:(bound_block)block
 {
@@ -33,7 +47,12 @@
 
 - (void)executeBlock:(bound_block)block
 {
-    block();
+    // dispatch the result asynchronously if a queue is bound
+    if (_queue) {
+        dispatch_async(_queue, block);
+    } else {
+        block();
+    }
 }
 
 - (void)chainTo:(Deferred *)deferred
@@ -54,15 +73,7 @@
 
 - (id)init
 {
-    if (self = [super init]) {
-        _callbackBindings = [[NSMutableArray alloc] init];
-        _state = Incomplete;
-        
-        _stateLock = [[NSObject alloc] init];
-        _result = nil;
-    }
-    
-    return self;
+    return [self initWithQueue:nil];
 }
 
 - (void)dealloc
@@ -78,6 +89,9 @@
     
     [_reason release];
     _reason = nil;
+    
+    [_queue release];
+    _queue = nil;
     
     [super dealloc];
 }
@@ -209,7 +223,7 @@
 
 - (Promise *)on:(dispatch_queue_t)queue
 {
-    Deferred *deferred = [[DispatchPromise alloc] initWithQueue:queue];
+    Deferred *deferred = [[Deferred alloc] initWithQueue:queue];
     
     [self chainTo:deferred];
     
@@ -219,6 +233,43 @@
 - (Promise *)onMainQueue
 {
     return [self on:dispatch_get_main_queue()];
+}
+
+- (Promise *)timeout:(NSTimeInterval)interval
+{
+    Deferred *toTimeout = [[Deferred alloc] initWithQueue:_queue];
+    
+    [self chainTo:toTimeout];
+    
+    dispatch_queue_t queue = _queue;
+    
+    // use the current dispatch queue if no queue is bound
+    if (queue == nil) {
+        queue = dispatch_get_current_queue();
+    }
+    
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    
+    dispatch_time_t intervalInNanoseconds = (dispatch_time_t)(NSEC_PER_SEC * interval);
+    //dispatch_time_t startTime = dispatch_walltime(DISPATCH_TIME_NOW, intervalInNanoseconds);
+    
+    NSLog(@"1. %@", [NSDate date]);
+    void (^eventHandler)(void) = ^{
+        dispatch_source_cancel(timer);
+        dispatch_release(timer);
+        
+        NSLog(@"2. %@", [NSDate date]);
+        [toTimeout reject:[NSError errorWithDomain:@"Timeout" code:100 userInfo:nil]];
+    };
+    
+    dispatch_source_set_timer(timer, dispatch_walltime(NULL, intervalInNanoseconds), intervalInNanoseconds, 0);
+    dispatch_source_set_event_handler(timer, eventHandler);
+    dispatch_resume(timer);
+    
+    [toTimeout release];
+    NSLog(@"3. %@", [NSDate date]);
+    
+    return [toTimeout promise];
 }
 
 @end

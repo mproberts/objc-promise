@@ -19,7 +19,9 @@
     dispatch_queue_t targetQueue = dispatch_queue_create("Test Queue", DISPATCH_QUEUE_SERIAL);
     
     [[deferred on:targetQueue] then:^(id result){
+        [condition lock];
         [condition wait];
+        [condition unlock];
         ++calls;
     }];
     
@@ -28,7 +30,9 @@
     STAssertEquals(calls, 0, @"The dispatch should not happen until we unblock the queue");
     
     usleep(USEC_PER_SEC * 0.05);
+    [condition lock];
     [condition signal];
+    [condition unlock];
     
     usleep(USEC_PER_SEC * 0.05);
     
@@ -46,8 +50,10 @@
     dispatch_queue_t targetQueue = dispatch_queue_create("Test Queue", DISPATCH_QUEUE_SERIAL);
     
     [[deferred on:targetQueue] failed:^(NSError *error){
+        [condition lock];
         [condition wait];
         ++calls;
+        [condition unlock];
     }];
     
     [deferred reject:[NSError errorWithDomain:@"Whoops" code:111 userInfo:nil]];
@@ -55,7 +61,9 @@
     STAssertEquals(calls, 0, @"The dispatch should not happen until we unblock the queue");
     
     usleep(USEC_PER_SEC * 0.05);
+    [condition lock];
     [condition signal];
+    [condition unlock];
     
     usleep(USEC_PER_SEC * 0.05);
     

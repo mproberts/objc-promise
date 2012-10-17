@@ -71,6 +71,24 @@
 @synthesize result = _result, reason = _reason;
 @dynamic isResolved, isRejected;
 
++ (Promise *)resolved:(id)result
+{
+    Deferred *deferred = [[Deferred alloc] init];
+    
+    [deferred resolve:result];
+    
+    return [deferred promise];
+}
+
++ (Promise *)rejected:(NSError *)reason
+{
+    Deferred *deferred = [[Deferred alloc] init];
+    
+    [deferred reject:reason];
+    
+    return [deferred promise];
+}
+
 - (id)init
 {
     return [self initWithQueue:nil];

@@ -12,4 +12,6 @@
 
 @interface TimerPromiseTests : SenTestCase
 
+- (void)testTimeout;
+
 @end

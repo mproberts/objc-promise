@@ -39,6 +39,9 @@ typedef enum {
 @property (readonly) BOOL isResolved;
 @property (readonly) BOOL isRejected;
 
++ (Promise *)resolved:(id)result;
++ (Promise *)rejected:(NSError *)reason;
+
 + (Promise *)or:(NSArray *)promises;
 + (Promise *)and:(NSArray *)promises;
 

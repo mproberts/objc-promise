@@ -17,10 +17,10 @@
 - (void)setUp;
 - (void)tearDown;
 
-- (void)testPromiseThen;
+- (void)testPromiseWhen;
 - (void)testPromiseFailed;
 - (void)testCalledOnceOnly;
 - (void)testResolvedBeforeBinding;
-- (void)testPromiseResolveCallsOnlyThenAndDone;
+- (void)testPromiseResolveCallsOnlyWhenAndDone;
 
 @end

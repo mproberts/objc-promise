@@ -33,16 +33,16 @@
     
     Promise *andAll = [Promise and:@[defer1, defer2, defer3]];
     
-    [andAll then:callback.thenBlock];
+    [andAll when:callback.whenBlock];
     
     [defer1 resolve:@1];
-    STAssertEquals(callback.thenCallCount, 0, @"Only 1 resolved");
+    STAssertEquals(callback.whenCallCount, 0, @"Only 1 resolved");
     
     [defer2 resolve:@2];
-    STAssertEquals(callback.thenCallCount, 0, @"Only 2 resolved");
+    STAssertEquals(callback.whenCallCount, 0, @"Only 2 resolved");
     
     [defer3 resolve:@3];
-    STAssertEquals(callback.thenCallCount, 1, @"All 3 resolved");
+    STAssertEquals(callback.whenCallCount, 1, @"All 3 resolved");
 }
 
 - (void)testAndRejection
@@ -53,17 +53,17 @@
     
     Promise *andAll = [Promise and:@[defer1, defer2, defer3]];
     
-    [andAll then:callback.thenBlock
+    [andAll when:callback.whenBlock
           failed:callback.failedBlock];
     
     [defer1 reject:[NSError errorWithDomain:@"Whoops" code:999 userInfo:nil]];
     STAssertEquals(callback.failedCallCount, 1, @"Only 1 resolved");
     
     [defer2 resolve:@2];
-    STAssertEquals(callback.thenCallCount, 0, @"Only 2 resolved");
+    STAssertEquals(callback.whenCallCount, 0, @"Only 2 resolved");
     
     [defer3 resolve:@3];
-    STAssertEquals(callback.thenCallCount, 0, @"All 3 resolved");
+    STAssertEquals(callback.whenCallCount, 0, @"All 3 resolved");
 }
 
 - (void)testOrSuccess
@@ -74,16 +74,16 @@
     
     Promise *orAll = [Promise or:@[defer1, defer2, defer3]];
     
-    [orAll then:callback.thenBlock];
+    [orAll when:callback.whenBlock];
     
     [defer1 resolve:@1];
-    STAssertEquals(callback.thenCallCount, 1, @"Only 1 resolved");
+    STAssertEquals(callback.whenCallCount, 1, @"Only 1 resolved");
     
     [defer2 resolve:@2];
-    STAssertEquals(callback.thenCallCount, 1, @"Only 2 resolved");
+    STAssertEquals(callback.whenCallCount, 1, @"Only 2 resolved");
     
     [defer3 resolve:@3];
-    STAssertEquals(callback.thenCallCount, 1, @"All 3 resolved");
+    STAssertEquals(callback.whenCallCount, 1, @"All 3 resolved");
 }
 
 - (void)testOrRejection
@@ -94,7 +94,7 @@
     
     Promise *orAll = [Promise or:@[defer1, defer2, defer3]];
     
-    [orAll then:callback.thenBlock
+    [orAll when:callback.whenBlock
          failed:callback.failedBlock];
     
     [defer1 reject:[NSError errorWithDomain:@"Whoops" code:999 userInfo:nil]];

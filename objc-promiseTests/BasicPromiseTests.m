@@ -25,18 +25,18 @@
     callback = nil;
 }
 
-- (void)testPromiseThen
+- (void)testPromisewhen
 {
     Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];
     
-    [promise then:callback.thenBlock];
+    [promise when:callback.whenBlock];
     
-    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
+    STAssertEquals(callback.whenCallCount, 0, @"when not called synchronously");
     
     [deferred resolve:@"A"];
     
-    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+    STAssertEquals(callback.whenCallCount, 1, @"when should be called");
 }
 
 - (void)testPromiseFailed
@@ -58,21 +58,21 @@
     Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];
     
-    [promise then:callback.thenBlock
+    [promise when:callback.whenBlock
            failed:callback.failedBlock
               any:callback.anyBlock];
     
-    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
+    STAssertEquals(callback.whenCallCount, 0, @"when not called synchronously");
     
     [deferred resolve:@"First"];
-    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+    STAssertEquals(callback.whenCallCount, 1, @"when should be called");
     STAssertEquals(callback.anyCallCount, 1, @"Any should be called");
     
     [deferred resolve:@"Second"];
-    STAssertEquals(callback.thenCallCount, 1, @"Then should be called only once");
+    STAssertEquals(callback.whenCallCount, 1, @"when should be called only once");
     
     [deferred reject:[NSError errorWithDomain:@"Third is an error" code:9001 userInfo:nil]];
-    STAssertEquals(callback.thenCallCount, 1, @"Promise cannot change state");
+    STAssertEquals(callback.whenCallCount, 1, @"Promise cannot change state");
     STAssertEquals(callback.failedCallCount, 0, @"Promise cannot change state");
     STAssertEquals(callback.anyCallCount, 1, @"Promise cannot change state");
 }
@@ -84,29 +84,29 @@
     
     [deferred resolve:@"First"];
     
-    [promise then:callback.thenBlock];
-    STAssertEquals(callback.thenCallCount, 1, @"Should be called immediately upon binding");
+    [promise when:callback.whenBlock];
+    STAssertEquals(callback.whenCallCount, 1, @"Should be called immediately upon binding");
     
-    [promise then:callback.thenBlock];
-    STAssertEquals(callback.thenCallCount, 2, @"Should be called again");
+    [promise when:callback.whenBlock];
+    STAssertEquals(callback.whenCallCount, 2, @"Should be called again");
 }
 
-- (void)testPromiseResolveCallsOnlyThenAndDone
+- (void)testPromiseResolveCallsOnlywhenAndDone
 {
     Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];
     
-    [promise then:callback.thenBlock
+    [promise when:callback.whenBlock
            failed:callback.failedBlock
               any:callback.anyBlock];
     
-    STAssertEquals(callback.thenCallCount, 0, @"Then not called synchronously");
+    STAssertEquals(callback.whenCallCount, 0, @"when not called synchronously");
     STAssertEquals(callback.failedCallCount, 0, @"Failed not called");
     STAssertEquals(callback.anyCallCount, 0, @"Done not called synchronously");
     
     [deferred resolve:@"Test"];
     
-    STAssertEquals(callback.thenCallCount, 1, @"Then should be called");
+    STAssertEquals(callback.whenCallCount, 1, @"when should be called");
     STAssertEquals(callback.failedCallCount, 0, @"Failed should not be called");
     STAssertEquals(callback.anyCallCount, 1, @"Done should be called");
 }

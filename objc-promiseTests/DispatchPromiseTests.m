@@ -18,7 +18,7 @@
     
     dispatch_queue_t targetQueue = dispatch_queue_create("Test Queue", DISPATCH_QUEUE_SERIAL);
     
-    [[deferred on:targetQueue] then:^(id result){
+    [[deferred on:targetQueue] when:^(id result){
         [condition lock];
         [condition wait];
         [condition unlock];

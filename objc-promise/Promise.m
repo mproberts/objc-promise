@@ -57,7 +57,7 @@
 
 - (void)chainTo:(Deferred *)deferred
 {
-    [self then:^(id result){
+    [self when:^(id result){
         [deferred resolve:result];
     } failed:^(NSError *error){
         [deferred reject:error];
@@ -114,7 +114,7 @@
     
     // any promise resolves our deferred
     for (Promise *promise in promises) {
-        [promise then:^(id result) {
+        [promise when:^(id result) {
             [deferred resolve:result];
         } failed:^(NSError *error){
             rejectedCount++;
@@ -137,7 +137,7 @@
     
     // any promise resolves our deferred
     for (Promise *promise in promises) {
-        [promise then:^(id result) {
+        [promise when:^(id result) {
             resolvedCount++;
             
             // all promises have resolved, resolve our promise
@@ -152,7 +152,7 @@
     return [deferred promise];
 }
 
-- (Promise *)then:(resolved_block)resolvedBlock
+- (Promise *)when:(resolved_block)resolvedBlock
 {
     __block Promise *this = self;
     
@@ -204,17 +204,17 @@
     return this;
 }
 
-- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock
+- (Promise *)when:(resolved_block)whenBlock failed:(rejected_block)rejectedBlock
 {
-    [self then:thenBlock];
+    [self when:whenBlock];
     [self failed:rejectedBlock];
     
     return self;
 }
 
-- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock
+- (Promise *)when:(resolved_block)whenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock
 {
-    [self then:thenBlock];
+    [self when:whenBlock];
     [self failed:rejectedBlock];
     [self any:anyBlock];
     

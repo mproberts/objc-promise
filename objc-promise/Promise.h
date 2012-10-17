@@ -42,11 +42,11 @@ typedef enum {
 + (Promise *)or:(NSArray *)promises;
 + (Promise *)and:(NSArray *)promises;
 
-- (Promise *)then:(resolved_block)resolvedBlock;
+- (Promise *)when:(resolved_block)resolvedBlock;
 - (Promise *)failed:(rejected_block)rejectedBlock;
 - (Promise *)any:(any_block)anyBlock;
-- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock;
-- (Promise *)then:(resolved_block)thenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock;
+- (Promise *)when:(resolved_block)whenBlock failed:(rejected_block)rejectedBlock;
+- (Promise *)when:(resolved_block)whenBlock failed:(rejected_block)rejectedBlock any:(any_block)anyBlock;
 
 - (Promise *)on:(dispatch_queue_t)queue;
 - (Promise *)onMainQueue;

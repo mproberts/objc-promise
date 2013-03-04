@@ -17,7 +17,7 @@
         _callbackBindings = [[NSMutableArray alloc] init];
         _state = Incomplete;
         
-        _queue = [queue retain];
+        _queue = queue;
         
         _stateLock = [[NSObject alloc] init];
         _result = nil;
@@ -32,7 +32,7 @@
     
     @synchronized (_stateLock) {
         if (_state == Incomplete) {
-            [_callbackBindings addObject:Block_copy(block)];
+            [_callbackBindings addObject: block];
             
             blockWasBound = YES;
         }
@@ -96,22 +96,11 @@
 
 - (void)dealloc
 {
-    [_callbackBindings release];
     _callbackBindings = nil;
-    
-    [_stateLock release];
     _stateLock = nil;
-    
-    [_result release];
     _result = nil;
-    
-    [_reason release];
     _reason = nil;
-    
-    [_queue release];
     _queue = nil;
-    
-    [super dealloc];
 }
 
 - (BOOL)isResolved
@@ -174,15 +163,10 @@
 {
     __block Promise *this = self;
     
-    // retain the block until we can call with the result
-    Block_copy(resolvedBlock);
-    
     [this bindOrCallBlock:^{
         if (this.isResolved) {
             resolvedBlock(this.result);
         }
-        
-        Block_release(resolvedBlock);
     }];
     
     return this;
@@ -192,15 +176,10 @@
 {
     __block Promise *this = self;
     
-    // retain the block until we can call with the result
-    Block_copy(rejectedBlock);
-    
     [this bindOrCallBlock:^{
         if (this.isRejected) {
             rejectedBlock(this.reason);
         }
-        
-        Block_release(rejectedBlock);
     }];
     
     return this;
@@ -210,13 +189,8 @@
 {
     __block Promise *this = self;
     
-    // retain the block until we can call with the result
-    Block_copy(anyBlock);
-    
     [this bindOrCallBlock:^{
         anyBlock();
-        
-        Block_release(anyBlock);
     }];
     
     return this;
@@ -245,7 +219,7 @@
     
     [self chainTo:deferred];
     
-    return [deferred autorelease];
+    return deferred;
 }
 
 - (Promise *)onMainQueue
@@ -263,7 +237,7 @@
     
     // use the current dispatch queue if no queue is bound
     if (queue == nil) {
-        queue = dispatch_get_current_queue();
+        queue = dispatch_get_main_queue();
     }
     
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
@@ -274,7 +248,6 @@
     NSLog(@"1. %@", [NSDate date]);
     void (^eventHandler)(void) = ^{
         dispatch_source_cancel(timer);
-        dispatch_release(timer);
         
         NSLog(@"2. %@", [NSDate date]);
         [toTimeout reject:[NSError errorWithDomain:@"Timeout" code:100 userInfo:nil]];
@@ -284,7 +257,6 @@
     dispatch_source_set_event_handler(timer, eventHandler);
     dispatch_resume(timer);
     
-    [toTimeout release];
     NSLog(@"3. %@", [NSDate date]);
     
     return [toTimeout promise];

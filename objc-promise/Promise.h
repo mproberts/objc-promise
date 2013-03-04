@@ -57,3 +57,11 @@ typedef enum {
 - (Promise *)timeout:(NSTimeInterval)interval;
 
 @end
+
+
+@interface Promise (Private)
+
+- (void)executeBlock:(bound_block)block;
+
+@end
+

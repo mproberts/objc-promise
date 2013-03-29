@@ -255,6 +255,11 @@
 
 - (Promise *)timeout:(NSTimeInterval)interval
 {
+    [self timeout:interval leeway:0.0];
+}
+
+- (Promise *)timeout:(NSTimeInterval)interval leeway:(NSTimeInterval)leeway
+{
     Deferred *toTimeout = [[Deferred alloc] initWithQueue:_queue];
     
     [self chainTo:toTimeout];
@@ -269,25 +274,60 @@
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     
     dispatch_time_t intervalInNanoseconds = (dispatch_time_t)(NSEC_PER_SEC * interval);
-    //dispatch_time_t startTime = dispatch_walltime(DISPATCH_TIME_NOW, intervalInNanoseconds);
     
-    NSLog(@"1. %@", [NSDate date]);
     void (^eventHandler)(void) = ^{
         dispatch_source_cancel(timer);
         dispatch_release(timer);
         
-        NSLog(@"2. %@", [NSDate date]);
         [toTimeout reject:[NSError errorWithDomain:@"Timeout" code:100 userInfo:nil]];
     };
     
-    dispatch_source_set_timer(timer, dispatch_walltime(NULL, intervalInNanoseconds), intervalInNanoseconds, 0);
+    dispatch_source_set_timer(timer, dispatch_walltime(NULL, intervalInNanoseconds), intervalInNanoseconds, leeway);
     dispatch_source_set_event_handler(timer, eventHandler);
     dispatch_resume(timer);
     
     [toTimeout release];
-    NSLog(@"3. %@", [NSDate date]);
     
     return [toTimeout promise];
+}
+
+- (Promise *)transform:(transform_block)block
+{
+    Deferred *transformed = [Deferred deferred];
+    __block transform_block transformBlock = Block_copy(block);
+    
+    [self when:^(id result) {
+        [transformed resolve:transformBlock(result)];
+    } failed:^(NSError *error) {
+        [transformed reject:error];
+    } any:^{
+        Block_release(transformBlock);
+    }];
+    
+    return [transformed promise];
+}
+
+- (id)wait:(NSTimeInterval)timeout
+{
+    __block BOOL waiting = YES;
+    NSCondition *waitCondition = [[NSCondition alloc] init];
+    
+    [self when:^(id result) {
+        [waitCondition lock];
+        waiting = NO;
+        [waitCondition signal];
+        [waitCondition unlock];
+    }];
+    
+    [waitCondition lock];
+    if (!waiting) {
+        [waitCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeout]];
+    }
+    [waitCondition unlock];
+    
+    [waitCondition release];
+    
+    return self.result;
 }
 
 @end

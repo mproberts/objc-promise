@@ -12,6 +12,8 @@
 
 - (void)transitionToState:(PromiseState)state
 {
+    [self retain];
+    
     NSArray *blocksToExecute = nil;
     BOOL shouldComplete = NO;
     
@@ -37,6 +39,7 @@
     }
     
     [blocksToExecute release];
+    [self release];
 }
 
 @end

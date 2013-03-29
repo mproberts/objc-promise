@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef void (^bound_block)(void);
+typedef id (^transform_block)(id);
 
 @class Deferred;
 @class DispatchPromise;
@@ -55,5 +56,10 @@ typedef enum {
 - (Promise *)onMainQueue;
 
 - (Promise *)timeout:(NSTimeInterval)interval;
+- (Promise *)timeout:(NSTimeInterval)interval leeway:(NSTimeInterval)leeway;
+
+- (Promise *)transform:(transform_block)block;
+
+- (id)wait:(NSTimeInterval)timeout;
 
 @end

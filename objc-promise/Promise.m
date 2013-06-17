@@ -16,9 +16,12 @@
     if (self = [super init]) {
         _callbackBindings = [[NSMutableArray alloc] init];
         _state = Incomplete;
-        
-        _queue = [queue retain];
-        
+
+        if (queue) {
+            dispatch_retain(queue);
+            _queue = queue;
+        }
+
         _stateLock = [[NSObject alloc] init];
         _result = nil;
     }
@@ -73,7 +76,7 @@
 
 + (Promise *)resolved:(id)result
 {
-    Deferred *deferred = [[Deferred alloc] init];
+    Deferred *deferred = [[[Deferred alloc] init] autorelease];
     
     [deferred resolve:result];
     
@@ -82,7 +85,7 @@
 
 + (Promise *)rejected:(NSError *)reason
 {
-    Deferred *deferred = [[Deferred alloc] init];
+    Deferred *deferred = [[[Deferred alloc] init] autorelease];
     
     [deferred reject:reason];
     
@@ -107,10 +110,12 @@
     
     [_reason release];
     _reason = nil;
-    
-    [_queue release];
-    _queue = nil;
-    
+
+    if (_queue) {
+        dispatch_release(_queue);
+        _queue = nil;
+    }
+
     [super dealloc];
 }
 
@@ -173,16 +178,11 @@
 - (Promise *)when:(resolved_block)resolvedBlock
 {
     __block Promise *this = self;
-    
-    // retain the block until we can call with the result
-    Block_copy(resolvedBlock);
-    
+
     [this bindOrCallBlock:^{
         if (this.isResolved) {
             resolvedBlock(this.result);
         }
-        
-        Block_release(resolvedBlock);
     }];
     
     return this;
@@ -192,15 +192,10 @@
 {
     __block Promise *this = self;
     
-    // retain the block until we can call with the result
-    Block_copy(rejectedBlock);
-    
     [this bindOrCallBlock:^{
         if (this.isRejected) {
             rejectedBlock(this.reason);
         }
-        
-        Block_release(rejectedBlock);
     }];
     
     return this;
@@ -210,13 +205,8 @@
 {
     __block Promise *this = self;
     
-    // retain the block until we can call with the result
-    Block_copy(anyBlock);
-    
     [this bindOrCallBlock:^{
         anyBlock();
-        
-        Block_release(anyBlock);
     }];
     
     return this;

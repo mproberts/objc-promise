@@ -34,7 +34,7 @@
     
     @synchronized (_stateLock) {
         if (_state == Incomplete) {
-            [_callbackBindings addObject:block];
+            [_callbackBindings addObject:[block copy]];
             
             blockWasBound = YES;
         }

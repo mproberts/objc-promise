@@ -21,7 +21,6 @@
 {
     [super tearDown];
     
-    [callback release];
     callback = nil;
 }
 

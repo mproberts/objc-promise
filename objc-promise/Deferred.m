@@ -12,8 +12,6 @@
 
 - (void)transitionToState:(PromiseState)state
 {
-    [self retain];
-    
     NSArray *blocksToExecute = nil;
     BOOL shouldComplete = NO;
     
@@ -23,9 +21,8 @@
             
             shouldComplete = YES;
             
-            blocksToExecute = [_callbackBindings retain];
+            blocksToExecute = _callbackBindings;
             
-            [_callbackBindings release];
             _callbackBindings = nil;
         }
     }
@@ -33,13 +30,8 @@
     if (shouldComplete) {
         for (bound_block block in blocksToExecute) {
             [self executeBlock:block];
-            
-            Block_release(block);
         }
     }
-    
-    [blocksToExecute release];
-    [self release];
 }
 
 @end
@@ -56,7 +48,7 @@
 
 + (Deferred *)deferred
 {
-    return [[[Deferred alloc] init] autorelease];
+    return [[Deferred alloc] init];
 }
 
 - (Promise *)promise
@@ -66,7 +58,7 @@
 
 - (Promise *)resolve:(id)result
 {
-    _result = [result retain];
+    _result = result;
     
     [self transitionToState:Resolved];
     
@@ -75,7 +67,7 @@
 
 - (Promise *)reject:(NSError *)reason
 {
-    _reason = [reason retain];
+    _reason = reason;
     
     [self transitionToState:Rejected];
     

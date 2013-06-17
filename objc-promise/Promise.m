@@ -18,7 +18,6 @@
         _state = Incomplete;
 
         if (queue) {
-            dispatch_retain(queue);
             _queue = queue;
         }
 
@@ -35,7 +34,7 @@
     
     @synchronized (_stateLock) {
         if (_state == Incomplete) {
-            [_callbackBindings addObject:Block_copy(block)];
+            [_callbackBindings addObject:block];
             
             blockWasBound = YES;
         }
@@ -76,7 +75,7 @@
 
 + (Promise *)resolved:(id)result
 {
-    Deferred *deferred = [[[Deferred alloc] init] autorelease];
+    Deferred *deferred = [[Deferred alloc] init];
     
     [deferred resolve:result];
     
@@ -85,7 +84,7 @@
 
 + (Promise *)rejected:(NSError *)reason
 {
-    Deferred *deferred = [[[Deferred alloc] init] autorelease];
+    Deferred *deferred = [[Deferred alloc] init];
     
     [deferred reject:reason];
     
@@ -95,28 +94,6 @@
 - (id)init
 {
     return [self initWithQueue:nil];
-}
-
-- (void)dealloc
-{
-    [_callbackBindings release];
-    _callbackBindings = nil;
-    
-    [_stateLock release];
-    _stateLock = nil;
-    
-    [_result release];
-    _result = nil;
-    
-    [_reason release];
-    _reason = nil;
-
-    if (_queue) {
-        dispatch_release(_queue);
-        _queue = nil;
-    }
-
-    [super dealloc];
 }
 
 - (BOOL)isResolved
@@ -178,7 +155,7 @@
 - (Promise *)when:(resolved_block)resolvedBlock
 {
     __block Promise *this = self;
-
+    
     [this bindOrCallBlock:^{
         if (this.isResolved) {
             resolvedBlock(this.result);
@@ -235,7 +212,7 @@
     
     [self chainTo:deferred];
     
-    return [deferred autorelease];
+    return deferred;
 }
 
 - (Promise *)onMainQueue
@@ -258,7 +235,7 @@
     
     // use the current dispatch queue if no queue is bound
     if (queue == nil) {
-        queue = dispatch_get_current_queue();
+        queue = dispatch_get_main_queue();
     }
     
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
@@ -267,7 +244,6 @@
     
     void (^eventHandler)(void) = ^{
         dispatch_source_cancel(timer);
-        dispatch_release(timer);
         
         [toTimeout reject:[NSError errorWithDomain:@"Timeout" code:100 userInfo:nil]];
     };
@@ -276,22 +252,19 @@
     dispatch_source_set_event_handler(timer, eventHandler);
     dispatch_resume(timer);
     
-    [toTimeout release];
-    
     return [toTimeout promise];
 }
 
 - (Promise *)transform:(transform_block)block
 {
     Deferred *transformed = [Deferred deferred];
-    __block transform_block transformBlock = Block_copy(block);
+    __block transform_block transformBlock = block;
     
     [self when:^(id result) {
         [transformed resolve:transformBlock(result)];
     } failed:^(NSError *error) {
         [transformed reject:error];
     } any:^{
-        Block_release(transformBlock);
     }];
     
     return [transformed promise];
@@ -314,8 +287,6 @@
         [waitCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:timeout]];
     }
     [waitCondition unlock];
-    
-    [waitCondition release];
     
     return self.result;
 }

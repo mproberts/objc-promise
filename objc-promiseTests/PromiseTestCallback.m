@@ -18,29 +18,20 @@
     if (self = [super init]) {
         __block PromiseTestCallback *this = self;
         
-        _whenBlock = Block_copy(^(id result){
+        self.whenBlock = ^(id result){
             this->_whenCount++;
-        });
+        };
         
-        _failedBlock = Block_copy(^(NSError *reason){
+        self.failedBlock = ^(NSError *reason){
             this->_failedCount++;
-        });
+        };
         
-        _anyBlock = Block_copy(^{
+        self.anyBlock = ^{
             this->_anyCount++;
-        });
+        };
     }
     
     return self;
-}
-
-- (void)dealloc
-{
-    Block_release(_whenBlock);
-    Block_release(_failedBlock);
-    Block_release(_anyBlock);
-    
-    [super dealloc];
 }
 
 @end

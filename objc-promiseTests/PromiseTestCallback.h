@@ -19,12 +19,12 @@
     int _anyCount;
 }
 
-@property (readonly, copy) resolved_block whenBlock;
-@property (readonly, copy) rejected_block failedBlock;
-@property (readonly, copy) any_block anyBlock;
+@property (nonatomic, copy) resolved_block whenBlock;
+@property (nonatomic, copy) rejected_block failedBlock;
+@property (nonatomic, copy) any_block anyBlock;
 
-@property (readonly, assign) int whenCallCount;
-@property (readonly, assign) int failedCallCount;
-@property (readonly, assign) int anyCallCount;
+@property (nonatomic, readonly, assign) int whenCallCount;
+@property (nonatomic, readonly, assign) int failedCallCount;
+@property (nonatomic, readonly, assign) int anyCallCount;
 
 @end

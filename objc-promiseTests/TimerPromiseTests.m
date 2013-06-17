@@ -27,8 +27,6 @@
     
     usleep(20000);
     STAssertEquals(calls, 1, @"Should timeout");
-    
-    dispatch_release(targetQueue);
 }
 
 @end

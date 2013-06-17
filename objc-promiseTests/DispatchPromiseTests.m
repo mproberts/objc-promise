@@ -37,8 +37,6 @@
     usleep(USEC_PER_SEC * 0.05);
     
     STAssertEquals(calls, 1, @"The queue was unblocked, calls should be set");
-    
-    dispatch_release(targetQueue);
 }
 
 - (void)testFailedDispatch
@@ -68,8 +66,6 @@
     usleep(USEC_PER_SEC * 0.05);
     
     STAssertEquals(calls, 1, @"The queue was unblocked, calls should be set");
-    
-    dispatch_release(targetQueue);
 }
 
 @end

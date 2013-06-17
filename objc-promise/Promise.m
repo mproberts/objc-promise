@@ -245,7 +245,7 @@
 
 - (Promise *)timeout:(NSTimeInterval)interval
 {
-    [self timeout:interval leeway:0.0];
+    return [self timeout:interval leeway:0.0];
 }
 
 - (Promise *)timeout:(NSTimeInterval)interval leeway:(NSTimeInterval)leeway

@@ -91,6 +91,54 @@
     return [deferred promise];
 }
 
++ (Promise *)chain:(promise_returning_arg_block)firstBlock, ... NS_REQUIRES_NIL_TERMINATION
+{
+    va_list args;
+    va_start(args, firstBlock);
+    
+    Deferred *chainedResult = [Deferred deferred];
+    
+    // load each block into the list
+    NSMutableArray *eachResultArray = [NSMutableArray array];
+    promise_returning_arg_block block = firstBlock;
+    
+    while (block) {
+        [eachResultArray addObject:block];
+        
+        block = va_arg(args, promise_returning_arg_block);
+    }
+    
+    va_end(args);
+    
+    // resolve block called from within the chain
+    __block resolved_block refResolveBlock = nil;
+    resolved_block resolveBlock = ^(id result) {
+        if (eachResultArray.count == 0) {
+            [chainedResult resolve:result];
+        }
+        else {
+            promise_returning_arg_block nextBlock = [eachResultArray firstObject];
+            
+            [eachResultArray removeObjectAtIndex:0];
+            
+            Promise *nextPromise = nextBlock(result);
+            
+            [nextPromise when:refResolveBlock
+                       failed:^(NSError *err) {
+                // we're done here, break the chain
+                [chainedResult reject:err];
+            }];
+        }
+    };
+    
+    refResolveBlock = resolveBlock;
+    
+    // kick off the chain
+    resolveBlock(nil);
+    
+    return [chainedResult promise];
+}
+
 - (id)init
 {
     return [self initWithQueue:nil];

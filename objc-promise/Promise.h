@@ -13,10 +13,14 @@ typedef id (^transform_block)(id);
 
 @class Deferred;
 @class DispatchPromise;
+@class Promise;
 
 typedef void (^resolved_block)(id);
 typedef void (^rejected_block)(NSError *);
 typedef void (^any_block)(void);
+
+typedef Promise *(^promise_returning_block)();
+typedef Promise *(^promise_returning_arg_block)(id arg);
 
 typedef enum {
     Incomplete = 0,
@@ -46,6 +50,15 @@ typedef enum {
 + (Promise *)or:(NSArray *)promises;
 + (Promise *)and:(NSArray *)promises;
 
+/**
+ * Calls each supplied block with the result of the promise from the previously executed
+ * block. If any promise rejects, the chain is broken. If all promises resolve, the result
+ * of the last promise will be returned.
+ *
+ * @returns a promise which is resolved with the result of the last executed block
+ */
++ (Promise *)chain:(promise_returning_arg_block)firstBlock, ... NS_REQUIRES_NIL_TERMINATION;
+
 - (Promise *)when:(resolved_block)resolvedBlock;
 - (Promise *)failed:(rejected_block)rejectedBlock;
 - (Promise *)any:(any_block)anyBlock;
@@ -63,7 +76,6 @@ typedef enum {
 - (id)wait:(NSTimeInterval)timeout;
 
 @end
-
 
 @interface Promise (Private)
 

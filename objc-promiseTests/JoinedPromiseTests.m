@@ -107,4 +107,59 @@
     STAssertEquals(callback.failedCallCount, 1, @"All 3 resolved");
 }
 
+- (void)testChaining
+{
+    Promise *chained = [Promise chain:^Promise *(id result) {
+        STAssertEqualObjects(nil, result, @"Expected last result");
+        
+        return [Promise resolved:@1];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @1, @"Expected last result");
+        
+        return [Promise resolved:@2];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @2, @"Expected last result");
+        
+        return [Promise resolved:@3];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @3, @"Expected last result");
+        
+        return [Promise resolved:@4];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @4, @"Expected last result");
+        
+        return [Promise resolved:@5];
+    }, nil];
+    
+    STAssertTrue(chained.isResolved, @"Should be resolved");
+    STAssertEqualObjects(chained.result, @5, @"Last result should be returned");
+}
+
+- (void)testBrokenChaining
+{
+    Promise *chained = [Promise chain:^Promise *(id result) {
+        STAssertEqualObjects(nil, result, @"Expected last result");
+        
+        return [Promise resolved:@1];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @1, @"Expected last result");
+        
+        return [Promise resolved:@2];
+    }, ^Promise *(id result) {
+        STAssertEqualObjects(result, @2, @"Expected last result");
+        
+        return [Promise rejected:[NSError errorWithDomain:@"" code:0 userInfo:nil]];
+    }, ^Promise *(id result) {
+        STFail(@"Chain should have already been broken");
+        
+        return [Promise resolved:@4];
+    }, ^Promise *(id result) {
+        STFail(@"Chain should have already been broken");
+        
+        return [Promise resolved:@5];
+    }, nil];
+    
+    STAssertTrue(chained.isRejected, @"Should be rejected");
+}
+
 @end

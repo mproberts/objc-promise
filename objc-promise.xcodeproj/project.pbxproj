@@ -15,7 +15,6 @@
 		7823C8C4162CEA6D000342B4 /* Deferred.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C8C1162CEA6D000342B4 /* Deferred.m */; };
 		7823C8C5162CEA6D000342B4 /* Promise.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C8C3162CEA6D000342B4 /* Promise.m */; };
 		7823C8CC162CEAAB000342B4 /* BasicPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C8CB162CEAAB000342B4 /* BasicPromiseTests.m */; };
-		7823C907162CEB86000342B4 /* objc-promiseTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7823C906162CEB86000342B4 /* objc-promiseTests-Info.plist */; };
 		7823C90F162D01F0000342B4 /* PromiseTestCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C90E162D01F0000342B4 /* PromiseTestCallback.m */; };
 		7823C918162D3397000342B4 /* JoinedPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C917162D3397000342B4 /* JoinedPromiseTests.m */; };
 		7823C91B162D3A7C000342B4 /* DispatchPromiseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7823C91A162D3A7C000342B4 /* DispatchPromiseTests.m */; };
@@ -237,7 +236,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7823C907162CEB86000342B4 /* objc-promiseTests-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

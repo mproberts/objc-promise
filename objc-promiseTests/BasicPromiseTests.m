@@ -24,7 +24,7 @@
     callback = nil;
 }
 
-- (void)testPromisewhen
+- (void)testPromiseWhen
 {
     Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];
@@ -90,7 +90,7 @@
     STAssertEquals(callback.whenCallCount, 2, @"Should be called again");
 }
 
-- (void)testPromiseResolveCallsOnlywhenAndDone
+- (void)testPromiseResolveCallsOnlyWhenAndDone
 {
     Deferred *deferred = [Deferred deferred];
     Promise *promise = [deferred promise];

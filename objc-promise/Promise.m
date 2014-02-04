@@ -188,9 +188,14 @@
         [promise when:^(id result) {
             resolvedCount++;
             
-            // all promises have resolved, resolve our promise
+            // all promises have resolved, 
+            // resolve our promise with all values
             if (resolvedCount == count) {
-                [deferred resolve:result];
+                NSMutableArray *finalResult =
+                    [NSMutableArray arrayWithCapacity:count];
+                for (Promise *promise in promises)
+                    [finalResult addObject:promise.result];
+                [deferred resolve:finalResult];
             }
         } failed:^(NSError *error){
             [deferred reject:error];
